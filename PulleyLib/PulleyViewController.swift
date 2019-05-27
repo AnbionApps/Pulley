@@ -1284,7 +1284,7 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
         
         if animated
         {
-            UIView.transition(with: primaryContentContainer, duration: 0.5, options: .transitionCrossDissolve, animations: { [weak self] () -> Void in
+            UIView.transition(with: primaryContentContainer, duration: animationDuration, options: .transitionCrossDissolve, animations: { [weak self] () -> Void in
                 
                 self?.primaryContentViewController = controller
                 
@@ -1326,7 +1326,7 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
 
         if animated
         {
-            UIView.transition(with: drawerContentContainer, duration: 0.5, options: .transitionCrossDissolve, animations: { [weak self] () -> Void in
+            UIView.transition(with: drawerContentContainer, duration: animationDuration, options: .transitionCrossDissolve, animations: { [weak self] () -> Void in
 
                 self?.drawerContentViewController = controller
                 self?.setDrawerPosition(position: newPosition ?? self?.drawerPosition ?? .collapsed, animated: false)
