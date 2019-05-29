@@ -246,9 +246,7 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
                 return
             }
 
-            controller.willMove(toParent: nil)
-            controller.view.removeFromSuperview()
-            controller.removeFromParent()
+            hide(controller: controller)
         }
 
         didSet {
@@ -257,12 +255,20 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
                 return
             }
 
-            addChild(controller)
+            show(controller: controller)
+        }
+    }
 
-            drawerContentContainer.addSubview(controller.view)
+    func hide(controller: UIViewController) {
+        controller.willMove(toParent: nil)
+        controller.view.removeFromSuperview()
+        controller.removeFromParent()
+    }
             
+    func show(controller: UIViewController) {
+        addChild(controller)
+        drawerContentContainer.addSubview(controller.view)
             controller.view.constrainToParent()
-            
             controller.didMove(toParent: self)
 
             if self.isViewLoaded
@@ -270,7 +276,6 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
                 self.view.setNeedsLayout()
                 self.setNeedsSupportedDrawerPositionsUpdate()
             }
-        }
     }
     
     /// Get the current bottom safe area for Pulley. This is a convenience accessor. Most delegate methods where you'd need it will deliver it as a parameter.
@@ -1221,6 +1226,12 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
         
         triggerFeedbackGenerator()
         
+        if position == .closed {
+            hide(controller: drawerContentViewController)
+        } else if drawerContentViewController.parent == nil {
+            show(controller: drawerContentViewController)
+        }
+
         if animated && self.view.window != nil
         {
             isAnimatingDrawerPosition = true
@@ -1242,8 +1253,10 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
 
                 }, completion: { [weak self] (completed) in
                     
-                    self?.isAnimatingDrawerPosition = false
-                    self?.syncDrawerContentViewSizeToMatchScrollPositionForSideDisplayMode()
+                    guard let self = self else { return }
+
+                    self.isAnimatingDrawerPosition = false
+                    self.syncDrawerContentViewSizeToMatchScrollPositionForSideDisplayMode()
                     
                     completion?(completed)
             })
