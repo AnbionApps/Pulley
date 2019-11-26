@@ -585,7 +585,7 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
             
             if supportedPositions.contains(drawerPosition)
             {
-                setDrawerPosition(position: drawerPosition, animated: true)
+                setDrawerPosition(position: drawerPosition, animated: false)
             }
             else
             {
@@ -971,6 +971,11 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
             partialRevealHeight = drawerVCCompliant.partialRevealDrawerHeight?(bottomSafeArea: pulleySafeAreaInsets.bottom) ?? kPulleyDefaultPartialRevealHeight
         }
         
+        if supportedPositions.contains(.closed)
+        {
+            drawerStops.append(0)
+        }
+
         if supportedPositions.contains(.collapsed)
         {
             drawerStops.append(collapsedHeight)
