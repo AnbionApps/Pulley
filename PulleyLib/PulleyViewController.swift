@@ -748,19 +748,15 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
         if primaryContentViewController == nil || drawerContentViewController == nil
         {
             assert(primaryContentContainerView != nil && drawerContentContainerView != nil, "When instantiating from Interface Builder you must provide container views with an embedded view controller.")
-            
-            // Locate main content VC
-            for child in self.children
+
+            if let foundDrawerContentViewController = self.children.first(where: { $0.view == drawerContentContainerView.subviews.first })
             {
-                if child.view == primaryContentContainerView.subviews.first
-                {
-                    primaryContentViewController = child
-                }
-                
-                if child.view == drawerContentContainerView.subviews.first
-                {
-                    drawerContentViewController = child
-                }
+                self.drawerContentViewController = foundDrawerContentViewController
+            }
+            
+            if let foundPrimaryContentViewController = self.children.first(where: { $0.view == primaryContentContainerView.subviews.first })
+            {
+                self.primaryContentViewController = foundPrimaryContentViewController
             }
             
             assert(primaryContentViewController != nil && drawerContentViewController != nil, "Container views must contain an embedded view controller.")
@@ -1233,7 +1229,7 @@ open class PulleyViewController: UIViewController, PulleyDrawerViewControllerDel
         
         if position == .closed {
             hide(controller: drawerContentViewController)
-        } else if drawerContentViewController.parent == nil {
+        } else if drawerContentViewController?.parent == nil {
             show(controller: drawerContentViewController)
         }
 
